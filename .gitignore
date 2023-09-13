@@ -1,0 +1,5 @@
+.venv
+.vscode
+__pycache__
+immo_data.csv
+*.pkl
