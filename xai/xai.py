@@ -77,7 +77,7 @@ class XaiExplainer:
         # Map output to feature_names and values
         intercept = output.intercept[0]
         results = output.as_list()
-        output.as_pyplot_figure()
+        # output.as_pyplot_figure()
         # Make y labels fit
         plt.tight_layout()
         plt.show()
@@ -103,7 +103,7 @@ class XaiExplainer:
                                                                        total_CFs=3,
                                                                        desired_range=[500, 700])
         print(counterfactuals.visualize_as_list())
-        counterfactuals.visualize_as_dataframe(show_only_changes=True)
+        # counterfactuals.visualize_as_dataframe(show_only_changes=True)
         return counterfactuals
 
 
