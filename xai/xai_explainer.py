@@ -10,13 +10,6 @@ from dice_ml import Dice
 
 from matplotlib import pyplot as plt
 
-from load_immo_data import load_saved_immo_data
-
-# Load config.yaml
-config = yaml.load(open('./immo_data_config.yaml'), Loader=yaml.FullLoader)
-column_names = config['column_names']
-standard_scaler_columns = config['standard_scaler_columns']
-
 
 class XaiExplainer:
     def __init__(self,
@@ -26,21 +19,22 @@ class XaiExplainer:
                  model):
         self.config = config
         self.target_column = config['target_column']
+        self.categorical_features = config['ordinal_columns']
+        self.categorical_features.extend(config['one_hot_columns'])
+        self.column_names = config['column_names']
         self.X_train = X_train
         self.y_train = y_train
         self.model = model
         self.categorical_names_dict = self.load_column_mapping()
         # Get categorical features
-        self.categorical_features = config['ordinal_columns']
-        self.categorical_features.extend(config['one_hot_columns'])
-        self.categorical_indices = [column_names.index(col) for col in
+        self.categorical_indices = [self.column_names.index(col) for col in
                                     self.categorical_features]  # indices of cat features
         # Get continuous features
         self.continuous_features = config['standard_scaler_columns']  # as strings
         self.background_df = self.create_background_df()  # background data for LIME and DICE
-        self.column_names_for_df = column_names.copy()
+        self.column_names_for_df = self.column_names.copy()
         self.column_names_for_df.append(self.target_column)  # background_df contains target column
-        self.column_names_for_np = column_names.copy()  # np array does not contain target column
+        self.column_names_for_np = self.column_names.copy()  # np array does not contain target column
 
     def create_background_df(self):
         df = pd.DataFrame(self.X_train, columns=self.config['column_names'])
@@ -54,7 +48,7 @@ class XaiExplainer:
         with open('immo_column_id_to_values_mapping.json', 'r') as file:
             categorical_names_dict = json.load(file)
         # Add condition to categorical names (it is not in the json file because it is ordered)
-        categorical_names_dict[column_names.index('condition')] = config['condition_order']
+        categorical_names_dict[self.column_names.index('condition')] = self.config['condition_order']
         return categorical_names_dict
 
     def get_feature_importances(self, data_instance):
@@ -65,13 +59,13 @@ class XaiExplainer:
                                                       mode="regression",
                                                       categorical_features=self.categorical_indices,
                                                       categorical_names=self.categorical_names_dict,
-                                                      feature_names=column_names,
+                                                      feature_names=self.column_names,
                                                       sample_around_instance=True,
                                                       discretize_continuous=True,
                                                       kernel_width=0.75 * np.sqrt(self.X_train.shape[1]))
-        prediction = model.predict(data_instance)
+        prediction = self.model.predict(data_instance)
         output = explainer.explain_instance(data_instance.flatten(),
-                                            model.predict,
+                                            self.model.predict,
                                             num_features=data_instance.shape[1])
         # TODO: What to return here?
         # Map output to feature_names and values
@@ -107,7 +101,8 @@ class XaiExplainer:
         return counterfactuals
 
 
-# Load trained model
+
+"""# Load trained model
 with open("model.pkl", 'rb') as file:
     model = pickle.load(file)
 
@@ -118,4 +113,4 @@ X_train, X_test, y_train, y_test = load_saved_immo_data()  # np arrays
 data_instance = X_test[2:3]
 xai = XaiExplainer(config, X_train, y_train, model)
 # xai.get_feature_importances(data_instance)
-xai.get_counterfactual_explanation(data_instance)
+xai.get_counterfactual_explanation(data_instance)"""
