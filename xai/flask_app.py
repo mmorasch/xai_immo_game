@@ -19,7 +19,7 @@ def get_datapoint():
 
 # TODO: get threshold
 @app.route("/threshold", methods=["GET"])
-def get_datapoint():
+def get_threshold():
     return {"threshold": "200"}
 
 # TODO: get experts opinion on datapoint given datapoint id
