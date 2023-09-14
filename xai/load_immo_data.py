@@ -116,7 +116,7 @@ def load_preprocessed_immo_data():
 
     # Map categorical values to numerical values
     col_names = list(df.columns)
-    categorical_col_ids = [df.columns.get_loc(col) for col in config['one_hot_columns']]
+    categorical_col_ids = [int(df.columns.get_loc(col)) for col in config['one_hot_columns']]
     df_numpy, categorical_mapping = _save_column_id_to_value_index_mapping(df.to_numpy(), categorical_col_ids)
     df = pd.DataFrame(df_numpy, columns=col_names)
     # Map condition to numerical values

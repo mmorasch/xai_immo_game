@@ -3,8 +3,9 @@ import pickle
 import pandas as pd
 import yaml
 
-from load_immo_data import load_saved_immo_data
-from xai_explainer import XaiExplainer
+from llm_prompts import create_system_message, create_apartment_with_user_prediction_prompt
+from xai.load_immo_data import load_saved_immo_data
+from xai.xai_explainer import XaiExplainer
 
 
 class ExperimentManager:
@@ -23,22 +24,45 @@ class ExperimentManager:
         self.y_test = y_test
         self.test_instances = self.X_test[0:10]
         # Load Model
-        with open("model.pkl", 'rb') as file:
+        with open("xai/model.pkl", 'rb') as file:
             model = pickle.load(file)
         self.model = model
         # Load XAI
         self.xai = XaiExplainer(self.config, X_train, y_train, self.model)
 
+    def np_instance_to_dict_with_values(self, instance):
+        # Return instance as dict and map column values to column names
+        df = pd.DataFrame(instance, columns=self.config['column_names'])
+        for col in self.xai.categorical_features:
+            df[col] = df[col].astype('int')
+        # Map categorical values to names
+        for col in self.xai.categorical_features:
+            col_id = self.xai.column_names.index(col)
+            feature_value_name = self.xai.categorical_names_dict[col_id][int(df[col])]
+            df[col] = feature_value_name
+        instance_dict = df.to_dict('r')[0]
+        return instance_dict
+
     def get_next_instance(self):
+        # Get instance and y label and delete from X_test and y_test
         self.current_instance = self.test_instances[0:1]
         # delete current instance from test instances
         self.test_instances = self.test_instances[1:]
-        # Return instance as dict and map column values to column names
-        df = pd.DataFrame(self.current_instance, columns=self.config['column_names'])
-        for col in self.xai.categorical_features:
-            df[col] = df[col].astype('int')
-        instance_dict = df.to_dict()
+        # Store y value of current instance
+        self.current_instance_y = self.y_test[0:1]
+        # delete current instance y from y_test
+        self.y_test = self.y_test[1:]
+        instance_dict = self.np_instance_to_dict_with_values(self.current_instance)
         return instance_dict
 
     def get_current_prediction(self):
         return self.model.predict(self.current_instance)[0]
+
+    def get_llm_context_prompt(self):
+        return create_system_message(manager.xai.categorical_features, manager.xai.continuous_features)
+
+    def get_llm_chat_start_prompt(self):
+        pass
+
+    def get_correct_price(self):
+        return self.current_instance_y[0]
