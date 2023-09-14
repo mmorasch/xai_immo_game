@@ -15,7 +15,7 @@ model_pkl_name = "model.pkl"
 
 def train():
     # Load config.yaml
-    config = yaml.load(open('./immo_data_config.yaml'), Loader=yaml.FullLoader)
+    config = yaml.load(open('./xai/immo_data_config.yaml'), Loader=yaml.FullLoader)
     target_column = config['target_column']
     ordinal_columns = config['ordinal_columns']
 

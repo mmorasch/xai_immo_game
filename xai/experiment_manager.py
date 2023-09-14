@@ -3,8 +3,8 @@ import pickle
 import pandas as pd
 import yaml
 
-from xai.load_immo_data import load_saved_immo_data
-from xai.xai_explainer import XaiExplainer
+from load_immo_data import load_saved_immo_data
+from xai_explainer import XaiExplainer
 
 
 class ExperimentManager:
@@ -42,8 +42,3 @@ class ExperimentManager:
 
     def get_current_prediction(self):
         return self.model.predict(self.current_instance)[0]
-
-
-manager = ExperimentManager()
-next_instance = manager.get_next_instance()
-print(manager.get_current_prediction())
