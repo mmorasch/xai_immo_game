@@ -5,17 +5,17 @@ from sklearn import metrics
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
 from load_immo_data import load_preprocessed_immo_data
 from sklearn.ensemble import GradientBoostingRegressor
 
-model_pkl_name = "model.pkl"
+model_pkl_name = "xai/model.pkl"
 
 
 def train():
     # Load config.yaml
-    config = yaml.load(open('./xai/immo_data_config.yaml'), Loader=yaml.FullLoader)
+    config = yaml.load(open('xai/immo_data_config.yaml'), Loader=yaml.FullLoader)
     target_column = config['target_column']
     ordinal_columns = config['ordinal_columns']
 
@@ -100,12 +100,12 @@ def train():
         pickle.dump(pipeline, file)
 
     # Save Data Splits to pkl
-    with open('data_splits.pkl', 'wb') as file:
+    with open('xai/data_splits.pkl', 'wb') as file:
         pickle.dump([X_train, X_test, y_train, y_test], file)
 
     # Save column names to config.yaml
     config['column_names'] = column_names
-    with open('./immo_data_config.yaml', 'w') as file:
+    with open('xai/immo_data_config.yaml', 'w') as file:
         yaml.dump(config, file)
 
 
@@ -115,7 +115,7 @@ def test():
         pipeline = pickle.load(file)
 
     # Load Data Splits from pkl
-    with open('data_splits.pkl', 'rb') as file:
+    with open('xai/data_splits.pkl', 'rb') as file:
         X_train, X_test, y_train, y_test = pickle.load(file)
 
     y_pred = pipeline.predict(X_test)

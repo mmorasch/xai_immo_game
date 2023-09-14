@@ -1,11 +1,14 @@
 column_names:
 - condition
-- regio1
 - regio2
-- regio3
-- yearConstructed
+- hasKitchen
+- balcony
+- typeOfFlat
+- heatingType
+- newlyConst
 - livingSpace
 - noRooms
+- yearConstructed
 condition_order:
 - Other
 - well_kept
@@ -16,20 +19,16 @@ condition_order:
 - first_time_use
 - first_time_use_after_refurbishment
 one_hot_columns:
-- regio1
 - regio2
-- regio3
-one_hot_deleted:
-- heatingType
-- typeOfFlat
-- newlyConst
-- balcony
 - hasKitchen
-- lift
+- balcony
+- typeOfFlat
+- heatingType
+- newlyConst
 ordinal_columns:
 - condition
 standard_scaler_columns:
-- yearConstructed
 - livingSpace
 - noRooms
+- yearConstructed
 target_column: totalRent
