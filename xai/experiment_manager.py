@@ -92,7 +92,3 @@ class ExperimentManager:
             return round(self.get_correct_price() + 300)
         else:
             return round(self.get_correct_price() - 300)
-
-
-em = ExperimentManager()
-print(em.get_next_instance())

@@ -45,7 +45,7 @@ class XaiExplainer:
 
     def load_column_mapping(self):
         # load categorical names from json file
-        with open('xai/immo_column_id_to_values_mapping.json', 'r') as file:
+        with open('./immo_column_id_to_values_mapping.json', 'r') as file:
             categorical_names_dict = json.load(file)
         # Add condition to categorical names (it is not in the json file because it is ordered)
         categorical_names_dict[self.column_names.index('condition')] = self.config['condition_order']
@@ -167,17 +167,3 @@ class XaiExplainer:
             cfe = pd.DataFrame(cfe).T
             change_strings.append(get_change_string(cfe, data_instance))
         return change_strings
-
-
-"""# Load trained model
-with open("model.pkl", 'rb') as file:
-    model = pickle.load(file)
-
-# Load Data Splits from pkl
-X_train, X_test, y_train, y_test = load_saved_immo_data()  # np arrays
-
-# Get random instance to explain
-data_instance = X_test[2:3]
-xai = XaiExplainer(config, X_train, y_train, model)
-# xai.get_feature_importances(data_instance)
-xai.get_counterfactual_explanation(data_instance)"""
