@@ -10,29 +10,30 @@ CORS(app)
 manager = ExperimentManager()
 
 
-
-# TODO: get a datapoint, including all columns
 @app.route("/datapoint", methods=["GET"])
 def get_datapoint():
     next_instance_dict = manager.get_next_instance()
     return next_instance_dict
 
-# TODO: get threshold
+
 @app.route("/threshold", methods=["GET"])
-def get_datapoint():
-    return {"threshold": "200"}
+def get_threshold():
+    threshold = manager.get_threshold()
+    return {"threshold": str(threshold) + "€"}
+
 
 # TODO: get experts opinion on datapoint given datapoint id
 @app.route("/expert/<datapoint_id>", methods=["GET"])
 def get_expert(datapoint_id):
     return {"result": "expert opinion"}  # TODO 0 or 1?
 
-# TODO: get prediction from xai_explainer.py for given datapoint id
+
 @app.route("/prediction/<datapoint_id>", methods=["GET"])
 def get_prediction(datapoint_id):
     # TODO: Only works if get_datapoint was called before
     prediction = manager.get_current_prediction()
-    return {"result": prediction}
+    return {"result": str(prediction)}
+
 
 # TODO: langchain prompt OpenAI with chat message. require slug for tracking in backend
 @app.route("/message/<slug>", methods=["POST"])
