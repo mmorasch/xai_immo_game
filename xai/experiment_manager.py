@@ -59,10 +59,21 @@ class ExperimentManager:
         return self.model.predict(self.current_instance)[0]
 
     def get_llm_context_prompt(self):
-        return create_system_message(manager.xai.categorical_features, manager.xai.continuous_features)
+        return create_system_message(self.xai.categorical_features, self.xai.continuous_features)
 
-    def get_llm_chat_start_prompt(self):
-        pass
+    def get_llm_chat_start_prompt(self, user_prediction):
+        feature_importances = self.xai.get_feature_importances(self.current_instance)[0]
+        target_price_range = [self.get_correct_price() + 100, self.get_correct_price() + 300]
+        threshold = self.get_correct_price() - 100
+        counterfactuals = self.xai.get_counterfactuals(self.current_instance, target_price_range)
+        # Turn current instance into dict
+        current_instance_dict = self.np_instance_to_dict_with_values(self.current_instance)
+        return create_apartment_with_user_prediction_prompt(current_instance_dict,
+                                                            threshold,
+                                                            self.get_correct_price(),
+                                                            user_prediction,
+                                                            feature_importances,
+                                                            counterfactuals)
 
     def get_correct_price(self):
         return self.current_instance_y[0]
