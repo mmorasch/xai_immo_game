@@ -1,11 +1,11 @@
-def create_initial_context_prompt(categorical_features, numerical_features, class_names):
+def create_system_message(categorical_features, numerical_features):
     prompt = f"""You are an XAI expert that is knowledgable about feature importance explanations such as LIME and you 
     will get local feature importance values as well as counterfactual explanations and will engage in an explanatory 
     dialog with a lay user about single data instances and the provided explanation. 
     
     The dataset is about rent prices in germany with the following features:
-    categorical_features = f{categorical_features}
-    numerical_features = f{numerical_features}
+    categorical_features = {categorical_features}
+    numerical_features = {numerical_features}
     
     Here are the descriptions of the features:
     condition: "The condition of the apartment, one from [Other, well_kept, modernized, refurbished, fully_renovated, mint_condition,
@@ -34,11 +34,15 @@ def create_initial_context_prompt(categorical_features, numerical_features, clas
     """
     return prompt
 
+
 def create_apartment_with_user_prediction_prompt(apartment,
+                                                 threshold,
                                                  correct_price,
                                                  lower_higher_prediction,
                                                  feature_importances,
                                                  counterfactuals):
+    user_prediction_as_string = "lower" if lower_higher_prediction == 0 else "higher"
+
     prompt = f"""Apartment information:
     condition: {apartment['condition']}
     regio2: {apartment['regio2']}
@@ -51,7 +55,7 @@ def create_apartment_with_user_prediction_prompt(apartment,
     noRooms: {apartment['noRooms']}
     yearConstructed: {apartment['yearConstructed']}
     
-    The correct price is {correct_price} euros and the user predicted that it is {lower_higher_prediction} than the threshold.
+    The correct price is {correct_price} euros and the user predicted that it is {user_prediction_as_string} than {threshold}.
     
     Tell the user if his prediction was right and ask if he has questions.
     
@@ -64,5 +68,6 @@ def create_apartment_with_user_prediction_prompt(apartment,
     
     Stick to the information provided here and in the prompts before. Ff you can't find it, ask for clarification or 
     say that you cannot answer it with the given explanation.
+    Avoid technical jargon and explain things in a simple way using understandable variable names.
     """
     return prompt
