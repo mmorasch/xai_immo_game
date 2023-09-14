@@ -19,8 +19,6 @@ def train():
     target_column = config['target_column']
     ordinal_columns = config['ordinal_columns']
 
-    condition_order = config['condition_order']
-
     one_hot_columns = config['one_hot_columns']
     standard_scaler_columns = config['standard_scaler_columns']
 
@@ -37,7 +35,7 @@ def train():
         standard_scaler_columns.remove('baseRent')
     except ValueError:
         pass  # not in list.
-
+    print(f"Using the following features: {x_df.columns.tolist()}")
     # turn one_hot_columns and standard_scaler_columns into lists of indices to train on numpy arrays and not dfs.
     column_names = list(x_df.columns)
     one_hot_columns = [column_names.index(col) for col in one_hot_columns]
