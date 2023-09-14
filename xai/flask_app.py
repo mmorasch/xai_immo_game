@@ -22,10 +22,10 @@ def get_threshold():
     return {"threshold": str(threshold) + "€"}
 
 
-# TODO: get experts opinion on datapoint given datapoint id
 @app.route("/expert/<datapoint_id>", methods=["GET"])
 def get_expert(datapoint_id):
-    return {"result": "expert opinion"}  # TODO 0 or 1?
+    expert_opinion = manager.get_expert_opinion()
+    return {"result": str(expert_opinion)}
 
 
 @app.route("/prediction/<datapoint_id>", methods=["GET"])

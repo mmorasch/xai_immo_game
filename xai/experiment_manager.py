@@ -1,4 +1,5 @@
 import pickle
+import random
 
 import pandas as pd
 import yaml
@@ -89,6 +90,10 @@ class ExperimentManager:
 
     def get_threshold(self):
         if self.instance_count % 2 == 0:
-            return round(self.get_correct_price() + 300)
+            return round(self.get_correct_price() + 300)  # higher threshold (correc click is lower)
         else:
-            return round(self.get_correct_price() - 300)
+            return round(self.get_correct_price() - 300)  # lower threshold (correc click is higher)
+
+    def get_expert_opinion(self):
+        "Expert opinion is random for now"
+        return random.choice([0, 1])  # TODO: 0 and 1 or lower and higher?
