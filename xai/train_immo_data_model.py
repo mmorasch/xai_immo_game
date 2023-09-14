@@ -1,4 +1,3 @@
-import json
 import pickle
 import yaml
 from sklearn import metrics

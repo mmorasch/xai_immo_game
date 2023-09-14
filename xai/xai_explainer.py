@@ -1,14 +1,10 @@
 import json
-import pickle
 
 import numpy as np
 import pandas as pd
-import yaml
 from lime import lime_tabular
 import dice_ml
 from dice_ml import Dice
-
-from matplotlib import pyplot as plt
 
 
 class XaiExplainer:
