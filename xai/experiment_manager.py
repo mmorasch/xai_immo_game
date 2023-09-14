@@ -23,6 +23,7 @@ class ExperimentManager:
         self.y_train = y_train
         self.y_test = y_test
         self.test_instances = self.X_test[0:10]
+        self.instance_count = 0
         # Load Model
         with open("xai/model.pkl", 'rb') as file:
             model = pickle.load(file)
@@ -44,15 +45,23 @@ class ExperimentManager:
         return instance_dict
 
     def get_next_instance(self):
-        # Get instance and y label and delete from X_test and y_test
-        self.current_instance = self.test_instances[0:1]
-        # delete current instance from test instances
-        self.test_instances = self.test_instances[1:]
-        # Store y value of current instance
-        self.current_instance_y = self.y_test[0:1]
-        # delete current instance y from y_test
-        self.y_test = self.y_test[1:]
+        # Find an instance where model error is small and 'other' is not in the condition column
+        model_error = 1000
+        while model_error > 100:
+            # Get instance and y label and delete from X_test and y_test
+            self.current_instance = self.test_instances[0:1]
+            # delete current instance from test instances
+            self.test_instances = self.test_instances[1:]
+            # Store y value of current instance
+            self.current_instance_y = self.y_test[0:1]
+            # delete current instance y from y_test
+            self.y_test = self.y_test[1:]
+            # check if 'other' is in current instance
+            if 0 == self.current_instance[0][0]:
+                continue
+            model_error = abs(self.model.predict(self.current_instance)[0] - self.current_instance_y[0])
         instance_dict = self.np_instance_to_dict_with_values(self.current_instance)
+        self.instance_count += 1
         return instance_dict
 
     def get_current_prediction(self):
@@ -77,3 +86,13 @@ class ExperimentManager:
 
     def get_correct_price(self):
         return self.current_instance_y[0]
+
+    def get_threshold(self):
+        if self.instance_count % 2 == 0:
+            return round(self.get_correct_price() + 300)
+        else:
+            return round(self.get_correct_price() - 300)
+
+
+em = ExperimentManager()
+print(em.get_next_instance())
