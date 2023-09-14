@@ -12,8 +12,14 @@ manager = ExperimentManager()
 
 @app.route("/datapoint", methods=["GET"])
 def get_datapoint():
-    next_instance_dict = manager.get_next_instance()
-    return next_instance_dict
+    result_dict = manager.get_next_instance()
+    threshold = manager.get_threshold()
+    expert_opinion = manager.get_expert_opinion()
+    prediction = manager.get_current_prediction()
+    result_dict["expert_opinion"] = str(expert_opinion)
+    result_dict["threshold"] = str(threshold) + "€"
+    result_dict["prediction"] = str(prediction)
+    return result_dict
 
 
 @app.route("/threshold", methods=["GET"])
