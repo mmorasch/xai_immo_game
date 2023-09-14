@@ -4,8 +4,8 @@ import pandas as pd
 import yaml
 
 from llm_prompts import create_system_message, create_apartment_with_user_prediction_prompt
-from xai.load_immo_data import load_saved_immo_data
-from xai.xai_explainer import XaiExplainer
+from load_immo_data import load_saved_immo_data
+from xai_explainer import XaiExplainer
 
 
 class ExperimentManager:
@@ -15,7 +15,7 @@ class ExperimentManager:
 
     def setup(self):
         # Load config
-        self.config = yaml.load(open('xai/immo_data_config.yaml'), Loader=yaml.FullLoader)
+        self.config = yaml.load(open('./immo_data_config.yaml'), Loader=yaml.FullLoader)
         # Load Data
         X_train, X_test, y_train, y_test = load_saved_immo_data()
         self.X_train = X_train
