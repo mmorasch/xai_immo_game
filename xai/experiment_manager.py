@@ -4,8 +4,8 @@ import pandas as pd
 import yaml
 
 from llm_prompts import create_system_message, create_apartment_with_user_prediction_prompt
-from xai.load_immo_data import load_saved_immo_data
-from xai.xai_explainer import XaiExplainer
+from load_immo_data import load_saved_immo_data
+from xai_explainer import XaiExplainer
 
 
 class ExperimentManager:
@@ -15,7 +15,7 @@ class ExperimentManager:
 
     def setup(self):
         # Load config
-        self.config = yaml.load(open('xai/immo_data_config.yaml'), Loader=yaml.FullLoader)
+        self.config = yaml.load(open('./immo_data_config.yaml'), Loader=yaml.FullLoader)
         # Load Data
         X_train, X_test, y_train, y_test = load_saved_immo_data()
         self.X_train = X_train
@@ -66,22 +66,3 @@ class ExperimentManager:
 
     def get_correct_price(self):
         return self.current_instance_y[0]
-
-
-manager = ExperimentManager()
-next_instance = manager.get_next_instance()
-# print(manager.get_current_prediction())
-# print(manager.xai.get_feature_importances(manager.current_instance))
-user_prediction = "0"  # 0 = lower, 1 = higher
-feature_importances = manager.xai.get_feature_importances(manager.current_instance)[0]
-target_price_range = [manager.get_correct_price() + 100, manager.get_correct_price() + 300]
-threshold = manager.get_correct_price() - 100
-counterfactuals = manager.xai.get_counterfactuals(manager.current_instance, target_price_range)
-# Turn current instance into dict
-current_instance_dict = manager.np_instance_to_dict_with_values(manager.current_instance)
-print(create_apartment_with_user_prediction_prompt(current_instance_dict,
-                                                   threshold,
-                                                   manager.get_correct_price(),
-                                                   user_prediction,
-                                                   feature_importances,
-                                                   counterfactuals))

@@ -1,6 +1,6 @@
 from flask import Flask
 
-from ExperimentManager import ExperimentManager
+from experiment_manager import ExperimentManager
 
 app = Flask(__name__)
 
@@ -32,3 +32,7 @@ def get_prediction(datapoint_id):
 @app.route("/message/<slug>", methods=["POST"])
 def post_message(slug):
     return "<p>Hello, World!</p>"
+
+if __name__ == "__main__":
+    # clean up storage file on restart
+    app.run(debug=False, port=4455, host='0.0.0.0')
