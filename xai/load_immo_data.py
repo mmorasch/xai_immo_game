@@ -24,7 +24,7 @@ def _save_column_id_to_value_index_mapping(data: np.ndarray,
         data[:, column_id] = le.transform(data[:, column_id])
         categorical_names[column_id] = le.classes_.tolist()
 
-    with open("xai/immo_column_id_to_values_mapping.json", "w") as f:
+    with open("xai/immo_column_id_to_values_mapping_en.json", "w") as f:
         json.dump(categorical_names, f)
 
     return data, categorical_names
@@ -40,7 +40,7 @@ def missing_values(df, norows):  # input by the df and the number of rows that y
 def load_preprocessed_immo_data():
     df = pd.read_csv('xai/immo_data.csv')
     # Load config.yaml
-    config = yaml.load(open('./xai/immo_data_config.yaml'), Loader=yaml.FullLoader)
+    config = yaml.load(open('./xai/immo_data_config_en.yaml'), Loader=yaml.FullLoader)
     wanted_cols = config['ordinal_columns'] + config['one_hot_columns'] + config['standard_scaler_columns']
     wanted_cols.append('baseRent')
     wanted_cols.append(config['target_column'])

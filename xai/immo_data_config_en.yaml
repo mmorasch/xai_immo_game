@@ -1,3 +1,4 @@
+language: en
 column_names:
   - condition
   - regio2
@@ -9,26 +10,6 @@ column_names:
   - livingSpace
   - noRooms
   - yearConstructed
-column_names_german:
-  - Zustand
-  - Stadt
-  - Küche vorhanden
-  - Balkon vorhanden
-  - Wohnungsart
-  - Heizungsart
-  - Neubau
-  - Wohnraum
-  - Zimmeranzahl
-  - Baujahr
-condition_order_german:
-  - keine Angabe
-  - gut erhalten
-  - modernisiert
-  - renoviert
-  - vollständig renoviert
-  - wie neu
-  - Erstbezug
-  - Erstbezug nach Sanierung
 condition_order:
   - Other
   - well_kept
