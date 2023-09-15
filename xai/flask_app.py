@@ -50,6 +50,7 @@ def get_prediction(datapoint_id):
 def get_start_prompt(slug):
     # TODO: Only works if get_datapoint was called before
     userPrediction = request.args.get('prediction')
+    print(f"User prediction {userPrediction}")
     start_prompt = SystemMessage(content=manager.get_llm_chat_start_prompt(userPrediction))
     result = chat.predict_messages([sys_msg1, start_prompt])
     return {"messages": [
