@@ -16,14 +16,14 @@ class ExperimentManager:
 
     def setup(self):
         # Load config
-        self.config = yaml.load(open('./immo_data_config.yaml'), Loader=yaml.FullLoader)
+        self.config = yaml.load(open('./xai/immo_data_config.yaml'), Loader=yaml.FullLoader)
         # Load Data
         X_train, X_test, y_train, y_test = load_saved_immo_data()
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
         self.y_test = y_test
-        self.test_instances = self.X_test[0:10]
+        self.test_instances = self.X_test[0:100]
         self.instance_count = 0
         # Load Model
         with open("xai/model.pkl", 'rb') as file:
