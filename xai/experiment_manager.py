@@ -135,14 +135,16 @@ class ExperimentManager:
             return self.current_instance_y
 
     def get_threshold(self):
+        self.threshold = round(self.get_correct_price() + self.get_correct_price() / 6)
         if self.instance_count % 2 == 0:
             self.correct_answer = "0"  # lower
-            self.target_price_range = [self.get_correct_price() + 300, self.get_correct_price() + 600]
-            return round(self.get_correct_price() + 300)  # higher threshold (correc click is lower)
+            self.target_price_range = [self.get_correct_price() + self.threshold,
+                                       self.get_correct_price() + (self.threshold + 100)]
         else:
             self.correct_answer = "1"  # higher
-            self.target_price_range = [self.get_correct_price() - 600, self.get_correct_price() - 300]
-            return round(self.get_correct_price() - 300)  # lower threshold (correc click is higher)
+            self.target_price_range = [self.get_correct_price() - (self.threshold + 100),
+                                       self.get_correct_price() - self.threshold]
+        return self.threshold
 
     def get_expert_opinion(self):
         "Expert opinion is random for now"
