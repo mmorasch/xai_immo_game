@@ -41,10 +41,16 @@ class XaiExplainer:
 
     def load_column_mapping(self):
         # load categorical names from json file
-        with open('./xai/immo_column_id_to_values_mapping.json', 'r') as file:
-            categorical_names_dict = json.load(file)
+        if self.config["language"] == 'de':
+            with open('./xai/immo_column_id_to_values_mapping_de.json', 'r') as file:
+                categorical_names_dict = json.load(file)
+            condition_col_name = "Zustand"
+        else:
+            with open('./xai/immo_column_id_to_values_mapping_en.json', 'r') as file:
+                categorical_names_dict = json.load(file)
+            condition_col_name = "condition"
         # Add condition to categorical names (it is not in the json file because it is ordered)
-        categorical_names_dict[self.column_names.index('condition')] = self.config['condition_order']
+        categorical_names_dict[self.column_names.index(condition_col_name)] = self.config['condition_order']
         # turn keys to int
         categorical_names_dict = {int(k): v for k, v in categorical_names_dict.items()}
         return categorical_names_dict
