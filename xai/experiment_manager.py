@@ -9,6 +9,43 @@ from load_immo_data import load_saved_immo_data
 from xai_explainer import XaiExplainer
 
 
+def map_to_german(instance_dict, config):
+    """Map english dict to german"""
+    english_keys = config["condition_order"]
+    german_keys = config["condition_order_german"]
+    english_german_mapping = {key: value for key, value in zip(english_keys, german_keys)}
+
+    heating_mapping = {
+        "central_heating": "Zentralheizung",
+        "combined_heat_and_power_plant": "Blockheizkraftwerk",
+        "district_heating": "Fernwärme",
+        "electric_heating": "Elektroheizung",
+        "floor_heating": "Fußbodenheizung",
+        "gas_heating": "Gasheizung",
+        "heat_pump": "Wärmepumpe",
+        "night_storage_heater": "Nachtspeicherofen",
+        "oil_heating": "Ölheizung",
+        "self_contained_central_heating": "eigenständige Zentralheizung",
+        "solar_heating": "Solarheizung",
+        "stove_heating": "Ofenheizung",
+        "wood_pellet_heating": "Holzpelletsheizung"
+    }
+
+    true_false_mapping = {"true": "Ja", "false": "Nein"}
+
+    instance_dict_german = {}
+    for key, value in instance_dict.items():
+        german_key = english_german_mapping[key]
+        if key == "heatingType":
+            german_value = heating_mapping[value]
+        elif key == "balcony" or key == "hasKitchen" or key == "newlyConst":
+            german_value = true_false_mapping[value]
+        else:
+            german_value = value
+        instance_dict_german[german_key] = german_value
+    return instance_dict_german
+
+
 class ExperimentManager:
     def __init__(self):
         self.current_instance = None
@@ -62,6 +99,7 @@ class ExperimentManager:
                 continue
             model_error = abs(self.model.predict(self.current_instance)[0] - self.current_instance_y[0])
         instance_dict = self.np_instance_to_dict_with_values(self.current_instance)
+        instance_dict = map_to_german(instance_dict, self.config)
         self.instance_count += 1
         return instance_dict
 
@@ -76,12 +114,11 @@ class ExperimentManager:
         counterfactuals = self.xai.get_counterfactuals(self.current_instance, self.target_price_range)
         # Turn current instance into dict
         current_instance_dict = self.np_instance_to_dict_with_values(self.current_instance)
-        # TODO: Write if user is correct or not
-        user_correct = self.correct_answer == user_prediction
         return create_apartment_with_user_prediction_prompt(current_instance_dict,
                                                             self.get_threshold(),
                                                             self.get_correct_price(),
-                                                            user_correct,
+                                                            user_prediction,
+                                                            self.correct_answer,
                                                             feature_importances,
                                                             counterfactuals)
 
@@ -90,11 +127,11 @@ class ExperimentManager:
 
     def get_threshold(self):
         if self.instance_count % 2 == 0:
-            self.correct_answer = 0  # lower
+            self.correct_answer = "0"  # lower
             self.target_price_range = [self.get_correct_price() + 300, self.get_correct_price() + 600]
             return round(self.get_correct_price() + 300)  # higher threshold (correc click is lower)
         else:
-            self.correct_answer = 1  # higher
+            self.correct_answer = "1"  # higher
             self.target_price_range = [self.get_correct_price() - 300, self.get_correct_price() - 600]
             return round(self.get_correct_price() - 300)  # lower threshold (correc click is higher)
 
