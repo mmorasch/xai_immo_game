@@ -73,15 +73,15 @@ class ExperimentManager:
 
     def get_llm_chat_start_prompt(self, user_prediction):
         feature_importances = self.xai.get_feature_importances(self.current_instance)[0]
-        target_price_range = [self.get_correct_price() + 100, self.get_correct_price() + 300]
-        threshold = self.get_correct_price() - 100
-        counterfactuals = self.xai.get_counterfactuals(self.current_instance, target_price_range)
+        counterfactuals = self.xai.get_counterfactuals(self.current_instance, self.target_price_range)
         # Turn current instance into dict
         current_instance_dict = self.np_instance_to_dict_with_values(self.current_instance)
+        # TODO: Write if user is correct or not
+        user_correct = self.correct_answer == user_prediction
         return create_apartment_with_user_prediction_prompt(current_instance_dict,
-                                                            threshold,
+                                                            self.get_threshold(),
                                                             self.get_correct_price(),
-                                                            user_prediction,
+                                                            user_correct,
                                                             feature_importances,
                                                             counterfactuals)
 
@@ -90,8 +90,12 @@ class ExperimentManager:
 
     def get_threshold(self):
         if self.instance_count % 2 == 0:
+            self.correct_answer = 0  # lower
+            self.target_price_range = [self.get_correct_price() + 300, self.get_correct_price() + 600]
             return round(self.get_correct_price() + 300)  # higher threshold (correc click is lower)
         else:
+            self.correct_answer = 1  # higher
+            self.target_price_range = [self.get_correct_price() - 300, self.get_correct_price() - 600]
             return round(self.get_correct_price() - 300)  # lower threshold (correc click is higher)
 
     def get_expert_opinion(self):
