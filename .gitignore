@@ -3,4 +3,3 @@
 __pycache__
 xai/immo_data.csv
 *.pkl
-xai/immo_column_id_to_values_mapping.json
