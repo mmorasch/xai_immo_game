@@ -75,7 +75,7 @@ def create_apartment_with_user_prediction_prompt(apartment,
         Wenn du sie hier nicht finden kannst, antworte, dass du sie mit den gegebenen Informationen nicht beantworten kannst. 
         Halten deine Antworten so kurz wie möglich. Sei höflich und verwende kein technisches Fachjargon.
         Erwähne also nichts von XAI oder LIME oder kontrafaktischen Erklärungen.
-        Beginne deinen Satz mit: "Deine Antwort ist ... und der echte Preis is ... Kann ich dir fragen zum Preis beantworten?"
+        Beginne deinen Satz mit: "Deine Antwort ist ... und der echte Preis is ... Möchtest du wissen wie der Preis zu stande kommt?
+        Das kann dir helfen in den nächsten Runden besser zu schätzen."
         """
-    print(feature_importances)
     return prompt
