@@ -132,14 +132,15 @@ class ExperimentManager:
             return self.current_instance_y
 
     def get_threshold(self):
-        self.threshold = round(self.get_correct_price() + self.get_correct_price() / 6)
         if self.instance_count % 2 == 0:
+            self.threshold = round(self.get_correct_price() + (self.get_correct_price() / 6))
             self.correct_answer = "0"  # lower
             self.target_price_range = [self.get_correct_price() + self.threshold,
-                                       self.get_correct_price() + (self.threshold + 100)]
+                                       self.get_correct_price() + (self.threshold + 200)]
         else:
+            self.threshold = round(self.get_correct_price() - (self.get_correct_price() / 6))
             self.correct_answer = "1"  # higher
-            self.target_price_range = [self.get_correct_price() - (self.threshold + 100),
+            self.target_price_range = [self.get_correct_price() - (self.threshold + 200),
                                        self.get_correct_price() - self.threshold]
         return self.threshold
 
