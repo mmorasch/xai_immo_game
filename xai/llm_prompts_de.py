@@ -1,6 +1,6 @@
 def create_system_message(categorical_features, numerical_features):
     prompt = f"""
-    Du bist eine KI die mithilfe von XAI Apartmentpreise in € vorhersagen kann. Du kennst dich mit LIME und kontrafaktische Erklärungen aus.
+    Du bist eine KI die mithilfe von XAI Apartmentpreise in € vorhersagen kann. Du kennst dich mit LIME.
     Du wirst dich in einem erläuternden Dialog mit einem Laien über einzelne Apartments mithilfe von XAI Erklärungen austauschen.
 
     Der Datensatz handelt von Mietpreisen in Deutschland mit den folgenden Merkmalen:
@@ -26,7 +26,8 @@ def create_system_message(categorical_features, numerical_features):
 
     Halte dich streng an die hier bereitgestellten Informationen.
     Wenn du sie hier nicht finden kannst, antworte, dass du sie mit den gegebenen Informationen nicht beantworten kannst. 
-    Halten deine Antworten so kurz wie möglich. Sei höflich und verwende kein technisches Fachjargon. Erwähne also nichts von XAI oder LIME oder kontrafaktischen Erklärungen.
+    Halten deine Antworten so kurz wie möglich. Sei höflich und verwende kein technisches Fachjargon.
+    Erwähne also nichts von XAI oder LIME.
     """
     return prompt
 
@@ -37,7 +38,6 @@ def create_apartment_with_user_prediction_prompt(apartment,
                                                  lower_higher_prediction,
                                                  correct_prediction,
                                                  feature_importances,
-                                                 counterfactuals,
                                                  expert_prediction):
     user_prediction_as_string = "weniger" if lower_higher_prediction == '0' else "mehr"
     user_correct = "richtig" if lower_higher_prediction == correct_prediction else "falsch"
@@ -64,9 +64,6 @@ def create_apartment_with_user_prediction_prompt(apartment,
         Hier sind XAI Erklärungen, die du dem Benutzer geben kannst.
         Merkmalswichtigkeiten:
         {feature_importances}
-
-        Kontrafaktische Informationen:
-        {counterfactuals}
         
         Der nutzer sieht auch, dass ein Experte das Apartment für {expert_correct} bewertet hat und dachte es wäre {expert_prediction_as_string} wert als {threshold}.
         Der Experte arbeitet ohne KI und bewertet die Wohnung aus seiner Erfahrung.
@@ -74,7 +71,7 @@ def create_apartment_with_user_prediction_prompt(apartment,
         Halte dich streng an die hier bereitgestellten Informationen.
         Wenn du sie hier nicht finden kannst, antworte, dass du sie mit den gegebenen Informationen nicht beantworten kannst. 
         Halten deine Antworten so kurz wie möglich. Sei höflich und verwende kein technisches Fachjargon.
-        Erwähne also nichts von XAI oder LIME oder kontrafaktischen Erklärungen.
+        Erwähne also nichts von XAI oder LIME.
         Beginne deinen Satz mit: "Deine Antwort ist ... und der echte Preis is ... Möchtest du wissen wie der Preis zu stande kommt?
         Das kann dir helfen in den nächsten Runden besser zu schätzen."
         """

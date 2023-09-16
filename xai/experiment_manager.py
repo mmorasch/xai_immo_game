@@ -106,10 +106,9 @@ class ExperimentManager:
             instance_2d = instance.reshape(1, -1)
             self.get_threshold()
             self.get_correct_price()
-            self.current_cfs = self.xai.get_counterfactuals(instance_2d, self.target_price_range)
+            # self.current_cfs = self.xai.get_counterfactuals(instance_2d, self.target_price_range)
             self.current_feature_importances = self.xai.get_feature_importances(instance_2d)[0]
-            instance_id_explanations_dict[instance_id] = {'cfs': self.current_cfs,
-                                                          'fis': self.current_feature_importances}
+            instance_id_explanations_dict[instance_id] = {'fis': self.current_feature_importances}
         # pickle
         with open('xai/instance_id_explanations_dict.pkl', 'wb') as handle:
             pickle.dump(instance_id_explanations_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -117,7 +116,6 @@ class ExperimentManager:
     def get_llm_chat_start_prompt(self, user_prediction):
         # Turn current instance into dict
         current_instance_dict = self.np_instance_to_dict_with_values(self.current_instance)
-        cfs = self.instance_id_explanations_dict[self.current_instance_id]['cfs']
         feature_importances = self.instance_id_explanations_dict[self.current_instance_id]['fis']
         return create_apartment_with_user_prediction_prompt(current_instance_dict,
                                                             self.get_threshold(),
@@ -125,7 +123,6 @@ class ExperimentManager:
                                                             user_prediction,
                                                             self.correct_answer,
                                                             feature_importances,
-                                                            cfs,
                                                             expert_prediction=self.expert_prediction)
 
     def get_correct_price(self):
