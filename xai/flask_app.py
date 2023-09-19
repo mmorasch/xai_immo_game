@@ -12,7 +12,7 @@ CORS(app)
 
 manager = ExperimentManager()
 
-chat = ChatOpenAI(openai_api_key='', model="gpt-3.5-turbo")
+chat = ChatOpenAI(openai_api_key='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', model="gpt-3.5-turbo")
 sys_msg1 = SystemMessage(content=manager.get_llm_context_prompt())
 
 def log_to_csv(slug: str, datapoint: dict, endpoint: str, messages: list, score: float = None):
