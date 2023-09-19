@@ -15,11 +15,13 @@ manager = ExperimentManager()
 chat = ChatOpenAI(openai_api_key='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', model="gpt-3.5-turbo")
 sys_msg1 = SystemMessage(content=manager.get_llm_context_prompt())
 
+
 def log_to_csv(slug: str, datapoint: dict, endpoint: str, messages: list, score: float = None):
     with open('log.csv', 'a') as f:
         writer_object = writer(f)
         writer_object.writerow([time.time(), slug, str(datapoint), endpoint, str(messages), score])
         f.close()
+
 
 @app.route("/<slug>/datapoint", methods=["POST"])
 def get_datapoint(slug):
@@ -58,6 +60,8 @@ def post_message(slug):
     score = request.json['score']
     chat_message_input = []
     for message in messages:
+        if isinstance(message['message'], list):
+            message['message'] = message['message'][0]
         if message['role'] == 'user':
             chat_message_input.append(HumanMessage(content=message['message']))
         elif message['role'] == 'assistant':
@@ -66,7 +70,7 @@ def post_message(slug):
             chat_message_input.append(SystemMessage(content=message['message']))
     result = chat.predict_messages(chat_message_input)
     output = {"messages": [
-       [result.content]
+        [result.content]
     ]}
     log_to_csv(slug=slug, datapoint=datapoint, endpoint="message", messages=[*messages, result.content], score=score)
     return output

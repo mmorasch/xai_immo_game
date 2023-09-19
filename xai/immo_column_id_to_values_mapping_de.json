@@ -1,0 +1,64 @@
+{
+  "1": [
+    "Berlin",
+    "Chemnitz",
+    "Dortmund",
+    "Dresden",
+    "Duisburg",
+    "D\u00fcsseldorf",
+    "Essen",
+    "Frankfurt_am_Main",
+    "Gelsenkirchen",
+    "Halle_Saale",
+    "Hamburg",
+    "K\u00f6ln",
+    "Leipzig",
+    "Leipzig_Kreis",
+    "Magdeburg",
+    "Mittelsachsen_Kreis",
+    "M\u00fcnchen",
+    "Nicht Angegeben",
+    "Recklinghausen_Kreis",
+    "Zwickau",
+    "Zwickau_Kreis"
+  ],
+  "2": [
+    "Nein",
+    "Ja"
+  ],
+  "3": [
+    "Nein",
+    "Ja"
+  ],
+  "4": [
+    "Nicht Angegeben",
+    "Apartment",
+    "Erdgeschoss",
+    "Halbkellerwohnung",
+    "Loft",
+    "Maisonette",
+    "Penthouse",
+    "Hocherdgeschoss",
+    "Dachgeschoss",
+    "Reihenhauswohnung"
+  ],
+  "5": [
+    "Zentralheizung",
+    "Blockheizkraftwerk",
+    "Fernwärme",
+    "Elektroheizung",
+    "Fußbodenheizung",
+    "Gasheizung",
+    "Wärmepumpe",
+    "Nachtspeicherofen",
+    "Ölheizung",
+    "eigenständige Zentralheizung",
+    "Solarheizung",
+    "Ofenheizung",
+    "Holzpelletsheizung"
+  ],
+  "6": [
+    "Nein",
+    "Ja"
+  ]
+}

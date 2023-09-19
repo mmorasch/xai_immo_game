@@ -1,0 +1,35 @@
+column_names:
+- Zustand
+- Stadt
+- "K\xFCche vorhanden"
+- Balkon vorhanden
+- Wohnungsart
+- Heizungsart
+- Neubau
+- Wohnraum
+- Zimmeranzahl
+- Baujahr
+condition_order:
+- keine Angabe
+- gut erhalten
+- modernisiert
+- renoviert
+- "vollst\xE4ndig renoviert"
+- wie neu
+- Erstbezug
+- Erstbezug nach Sanierung
+language: de
+one_hot_columns:
+- Stadt
+- "K\xFCche vorhanden"
+- Balkon vorhanden
+- Wohnungsart
+- Heizungsart
+- Neubau
+ordinal_columns:
+- Zustand
+standard_scaler_columns:
+- Wohnraum
+- Zimmeranzahl
+- Baujahr
+target_column: totalRent

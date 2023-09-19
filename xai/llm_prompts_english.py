@@ -39,9 +39,11 @@ def create_apartment_with_user_prediction_prompt(apartment,
                                                  threshold,
                                                  correct_price,
                                                  lower_higher_prediction,
+                                                 correct_prediction,
                                                  feature_importances,
                                                  counterfactuals):
     user_prediction_as_string = "lower" if lower_higher_prediction == 0 else "higher"
+    user_correct = "correct" if lower_higher_prediction == correct_prediction else "incorrect"
 
     prompt = f"""Apartment information:
     condition: {apartment['condition']}
@@ -56,8 +58,8 @@ def create_apartment_with_user_prediction_prompt(apartment,
     yearConstructed: {apartment['yearConstructed']}
     
     The correct price is {correct_price} euros and the user predicted that it is {user_prediction_as_string} than {threshold}.
-    
-    Tell the user if his prediction was right and ask if he has questions.
+    Therefore, the user is {user_correct}.
+    Tell the user if his prediction was right and ask if he has questions in a polite way.
     
     If he asks questions regarding feature importances or counterfactuals, use the following information to answer that:
     Feature Importances:
@@ -66,7 +68,7 @@ def create_apartment_with_user_prediction_prompt(apartment,
     Counterfactuals
     {counterfactuals}
     
-    Stick to the information provided here and in the prompts before. Ff you can't find it, ask for clarification or 
+    Stick to the information provided here and in the prompts before. If you can't find it, ask for clarification or 
     say that you cannot answer it with the given explanation.
     Avoid technical jargon and explain things in a simple way using understandable variable names.
     """
