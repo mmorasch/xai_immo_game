@@ -60,6 +60,8 @@ def post_message(slug):
     score = request.json['score']
     chat_message_input = []
     for message in messages:
+        if isinstance(message['message'], list):
+            message['message'] = message['message'][0]
         if message['role'] == 'user':
             chat_message_input.append(HumanMessage(content=message['message']))
         elif message['role'] == 'assistant':
