@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
+
 from experiment_manager import ExperimentManager
 from csv import writer
 import time
@@ -12,7 +13,7 @@ CORS(app)
 
 manager = ExperimentManager()
 
-chat = ChatOpenAI(openai_api_key='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', model="gpt-3.5-turbo")
+chat = ChatOpenAI(openai_api_key='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', model="gpt-4", max_tokens=200)
 sys_msg1 = SystemMessage(content=manager.get_llm_context_prompt())
 
 
@@ -51,7 +52,6 @@ def get_start_prompt(slug):
     ]}
     log_to_csv(slug=slug, datapoint=datapoint, endpoint="start_prompt", messages=output, score=score)
     return output
-
 
 @app.route("/<slug>/message", methods=["POST"])
 def post_message(slug):
